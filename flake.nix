@@ -46,7 +46,11 @@
           version = "${version}";
           pname = "hybrid";
           src = ./.;
-          cargoLock.lockFile = ./cargo.lock;  
+          cargoLock.lockFile = ./Cargo.lock;  
+          cargoBuildFlags = [
+              "--bin"
+              "hybrid-bar"
+            ];
 
           nativeBuildInputs = with pkgs; [
             pkg-config
@@ -54,15 +58,22 @@
           ];
 
           buildInputs = with pkgs; [
-            gtk3
-            librsvg
-            gtk-layer-shell
-            libdbusmenu-gtk3
+              gtk3
+              gtk-layer-shell 
+              wlroots 
+              librsvg
+              libdbusmenu-gtk3
+              wget
           ];
+          
+          doCheck = false;
         };
       }
     );
 
     defaultPackage.x86_64-linux = self.packages.x86_64-linux.hybrid;
+    shellHook = ''
+      export GDK_BACKEND=wayland
+    '';
   };
 }
